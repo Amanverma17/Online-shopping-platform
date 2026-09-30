@@ -1,0 +1,37 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Go
+backend/bin/
+backend/tmp/
+
+# Node
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+
+# Build files
+dist/
+build/
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.pem
+*.key
+
+# Local database files
+*.db
+*.sqlite
+*.sqlite3
