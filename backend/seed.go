@@ -81,7 +81,7 @@ func seedDatabase() {
 	// It removes the old demo catalog so old products/broken images do not remain.
 	// It also removes old demo carts/orders because they reference old products.
 	// After the first successful run, change this to false.
-	const resetCatalog = true
+	const resetCatalog = false
 
 	if resetCatalog {
 		if err := config.DB.Exec(`TRUNCATE TABLE cart_items, order_items, orders, products, categories RESTART IDENTITY CASCADE`).Error; err != nil {
