@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+<rect width="600" height="600" rx="32" fill="#f8fafc"/>
+<path d="M150 155c45 70 75 105 145 120 60 13 100 50 125 85H110c-25-65 5-100 40-120z" fill="#475569" opacity=".25" stroke="#475569" stroke-width="14"/>
+<text x="300" y="480" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" fill="#111827">Nike Running Shoes</text>
+<text x="300" y="520" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#6b7280">Shoes</text>
+</svg>

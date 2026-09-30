@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+<rect width="600" height="600" rx="32" fill="#f0fdf4"/>
+<rect x="215" y="95" width="170" height="300" rx="80" fill="none" stroke="#15803d" stroke-width="18"/><path d="M300 100v100" stroke="#15803d" stroke-width="16"/><circle cx="300" cy="160" r="12" fill="#15803d"/>
+<text x="300" y="480" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" fill="#111827">Logitech Mouse</text>
+<text x="300" y="520" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#6b7280">Computer Accessories</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
+<rect width="600" height="600" rx="32" fill="#f5efff"/>
+<path d="M155 300c-25-100 45-145 100-105h90c55-40 125 5 100 105-15 60-65 70-100 5H255c-35 65-85 55-100-5z" fill="#7c3aed" opacity=".25" stroke="#7c3aed" stroke-width="14"/><path d="M215 230v60m-30-30h60M385 235h5m40 25h5" stroke="#7c3aed" stroke-width="16" stroke-linecap="round"/>
+<text x="300" y="480" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" fill="#111827">PlayStation 5 Gaming Consoles</text>
+<text x="300" y="520" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="18" fill="#6b7280">Gaming</text>
+</svg>
