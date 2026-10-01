@@ -2,6 +2,7 @@ package main
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 
@@ -146,6 +147,12 @@ func main() {
 	protected.GET("/orders", handlers.GetMyOrders)
 
 	// Start server
-	router.Run(":8080")
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = "8080"
+	}
+
+	router.Run(":" + port)
 
 }
