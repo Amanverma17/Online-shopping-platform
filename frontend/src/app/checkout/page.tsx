@@ -28,6 +28,7 @@ interface Address {
 
 export default function CheckoutPage() {
   const router = useRouter();
+  const [orderSuccess, setOrderSuccess] = useState(false);
 
   const [items, setItems] = useState<CartItem[]>([]);
   const [addresses, setAddresses] = useState<Address[]>([]);
@@ -148,7 +149,7 @@ export default function CheckoutPage() {
         method: "POST",
       });
 
-      alert("Order placed successfully!");
+      setOrderSuccess(true);
 
       router.push("/orders");
     } catch (error) {
@@ -178,26 +179,12 @@ export default function CheckoutPage() {
   return (
     <main className="min-h-screen bg-gray-50">
 
-      {/* Navbar */}
-      <nav className="border-b bg-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-
-          <Link
-            href="/"
-            className="text-2xl font-extrabold tracking-tight"
-          >
-            ABB<span className="text-green-600">Store</span>
-          </Link>
-
-          <Link
-            href="/cart"
-            className="font-medium text-gray-600 hover:text-green-600"
-          >
-            ← Cart
-          </Link>
-
+      {orderSuccess && (
+        <div className="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-700">
+          Order placed successfully!
         </div>
-      </nav>
+      )}
+      
 
       {/* Checkout */}
       <section className="mx-auto max-w-6xl px-6 py-10">
@@ -358,8 +345,8 @@ export default function CheckoutPage() {
                         <div
                           key={address.ID}
                           className={`rounded-xl border p-4 transition ${selectedAddress?.ID === address.ID
-                              ? "border-green-500 bg-green-50"
-                              : "border-gray-200 bg-white"
+                            ? "border-green-500 bg-green-50"
+                            : "border-gray-200 bg-white"
                             }`}
                         >
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
 
@@ -30,9 +30,11 @@ interface UserProfile {
 }
 
 export default function Navbar() {
+    const router = useRouter();
     const pathname = usePathname();
 
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [selectedAddress, setSelectedAddress] =
@@ -296,6 +298,16 @@ export default function Navbar() {
             ? `${selectedAddress.house}, ${selectedAddress.street}, ${selectedAddress.city} - ${selectedAddress.pincode}`
             : "Select delivery address";
 
+    const handleSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const query = searchQuery.trim();
+
+        if (!query) return;
+
+        router.push(`/products?search=${encodeURIComponent(query)}`);
+    };
+
     return (
         <nav className="w-full border-b border-gray-200 bg-white">
             <div className="flex h-[86px] w-full items-center px-8">
@@ -408,8 +420,8 @@ export default function Navbar() {
                                                         )
                                                     }
                                                     className={`w-full px-4 py-4 text-left hover:bg-gray-50 ${isSelected
-                                                            ? "bg-green-50"
-                                                            : ""
+                                                        ? "bg-green-50"
+                                                        : ""
                                                         }`}
                                                 >
 
@@ -494,19 +506,22 @@ export default function Navbar() {
                 {/* SEARCH */}
                 {/* ===================== */}
 
-                <div className="flex min-w-0 flex-1 items-center rounded-xl border border-gray-300 px-5 py-3">
-
+                <form
+                    onSubmit={handleSearch}
+                    className="flex min-w-0 flex-1 items-center rounded-xl border border-gray-300 px-5 py-3"
+                >
                     <span className="mr-3 shrink-0 text-xl text-gray-700">
                         ⌕
                     </span>
 
                     <input
                         type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
                         placeholder="Search for products..."
                         className="min-w-0 flex-1 bg-transparent text-base outline-none"
                     />
-
-                </div>
+                </form>
 
                 {/* ===================== */}
                 {/* ACCOUNT */}

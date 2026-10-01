@@ -22,7 +22,7 @@ func seedDatabase() {
 	//
 	// After the catalog is successfully rebuilt,
 	// change this to false.
-	const resetCatalog = true
+	const resetCatalog = false
 
 	if resetCatalog {
 		if err := config.DB.Exec(
