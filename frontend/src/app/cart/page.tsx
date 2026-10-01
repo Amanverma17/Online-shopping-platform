@@ -52,6 +52,10 @@ export default function CartPage() {
           (item) => item.product.ID !== productId
         )
       );
+
+      window.dispatchEvent(
+        new Event("cartUpdated")
+      );
     } catch (error) {
       console.error("Remove cart error:", error);
 
@@ -92,6 +96,11 @@ export default function CartPage() {
             : item
         )
       );
+
+      window.dispatchEvent(
+        new Event("cartUpdated")
+      );
+
     } catch (error) {
       console.error("Update quantity error:", error);
 
@@ -123,32 +132,7 @@ export default function CartPage() {
     <AuthGuard>
       <main className="min-h-screen bg-gray-50 text-gray-900">
 
-        {/* ================= HEADER ================= */}
-
-        <nav className="border-b bg-white">
-
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-
-            <Link
-              href="/"
-              className="text-2xl font-extrabold tracking-tight"
-            >
-              ABB
-              <span className="text-green-600">
-                Store
-              </span>
-            </Link>
-
-            <Link
-              href="/"
-              className="text-sm font-medium text-gray-600 transition hover:text-green-600"
-            >
-              Continue Shopping
-            </Link>
-
-          </div>
-
-        </nav>
+        
 
         {/* ================= CART CONTENT ================= */}
 
@@ -274,8 +258,10 @@ export default function CartPage() {
                         </div>
 
                         {/* Quantity */}
-                        <div className="shrink-0">
+                        {/* Quantity + Remove */}
+                        <div className="flex shrink-0 items-center gap-3">
 
+                          {/* Quantity Controls */}
                           <div className="flex items-center overflow-hidden rounded-lg bg-green-600 text-white">
 
                             <button
@@ -309,6 +295,16 @@ export default function CartPage() {
                             </button>
 
                           </div>
+
+                          {/* Remove Product */}
+                          <button
+                            type="button"
+                            onClick={() => removeItem(item.product.ID)}
+                            title="Remove product"
+                            className="flex h-9 w-9 items-center justify-center rounded-lg border border-red-200 bg-red-50 text-red-500 transition hover:border-red-300 hover:bg-red-100 hover:text-red-600"
+                          >
+                            🗑️
+                          </button>
 
                         </div>
 

@@ -1013,95 +1013,85 @@ export default function CategoryPage() {
                         return (
                           <div
                             key={product.ID}
-                            className="overflow-hidden rounded-xl border bg-white transition hover:shadow-md"
+                            className="flex h-full min-h-[355px] flex-col overflow-hidden rounded-xl border bg-white transition hover:shadow-md"
                           >
-
                             <Link
                               href={`/products/${product.ID}`}
-                              className="block"
+                              className="flex h-full flex-col"
                             >
-
                               {/* Product Image */}
-                              <div className="relative aspect-square bg-gray-50">
-
+                              <div className="relative h-[190px] shrink-0 bg-gray-50">
                                 {product.image_url ? (
                                   <img
-                                    src={
-                                      product.image_url
-                                    }
-                                    alt={
-                                      product.name
-                                    }
-                                    className="h-full w-full object-cover"
+                                    src={product.image_url}
+                                    alt={product.name}
+                                    className="h-full w-full object-contain"
                                   />
                                 ) : (
                                   <div className="flex h-full items-center justify-center text-gray-400">
                                     No image
                                   </div>
                                 )}
-
                               </div>
 
                               {/* Product Details */}
-                              <div className="p-3">
+                              <div className="flex flex-1 flex-col p-3">
 
-                                <p className="mb-1 text-[11px] text-gray-500">
+                                {/* Delivery */}
+                                <p className="mb-1 h-[18px] text-[11px] text-gray-500">
                                   ⚡ 10 mins
                                 </p>
 
-                                <h3 className="line-clamp-2 min-h-[40px] text-sm font-semibold">
+                                {/* Product Name */}
+                                <h3 className="line-clamp-2 h-[40px] text-sm font-semibold leading-5">
                                   {product.name}
                                 </h3>
 
-                                <p className="mt-1 line-clamp-2 text-xs text-gray-500">
+                                {/* Description */}
+                                <p className="mt-1 line-clamp-2 h-[32px] text-xs leading-4 text-gray-500">
                                   {product.description}
                                 </p>
 
-                                <p className="mt-1 text-xs text-gray-500">
-                                  Stock:{" "}
-                                  {product.stock}
+                                {/* Stock */}
+                                <p className="mt-1 h-[18px] text-xs text-gray-500">
+                                  Stock: {product.stock}
                                 </p>
 
                                 {/* Price + Cart */}
-                                <div className="mt-3 flex items-center justify-between">
+                                <div className="mt-auto flex items-center justify-between pt-3">
 
                                   <span className="font-bold">
                                     ₹{product.price}
                                   </span>
 
-                                  {/* ADD */}
+                                  {/* ADD / QUANTITY */}
                                   {quantity === 0 ? (
-
                                     <button
                                       onClick={(e) => {
                                         e.preventDefault();
                                         e.stopPropagation();
                                         addToCart(product.ID);
                                       }}
-                                      disabled={
-                                        adding ===
-                                        product.ID
-                                      }
-                                      className="rounded-lg border border-green-600 px-4 py-2 text-xs font-bold text-green-600 transition hover:bg-green-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+                                      disabled={adding === product.ID}
+                                      className="h-[34px] min-w-[58px] rounded-lg border border-green-600 px-3 text-xs font-bold text-green-600 transition hover:bg-green-600 hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
                                     >
-                                      {adding ===
-                                        product.ID
-                                        ? "..."
-                                        : "ADD"}
+                                      {adding === product.ID ? "..." : "ADD"}
                                     </button>
-
                                   ) : (
-
-                                    /* QUANTITY CONTROLS */
-                                    <div className="flex items-center overflow-hidden rounded-lg bg-green-600 text-white">
-
+                                    <div
+                                      onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                      }}
+                                      className="flex h-[34px] items-center overflow-hidden rounded-lg bg-green-600 text-white"
+                                    >
                                       <button
                                         onClick={(e) => {
                                           e.preventDefault();
                                           e.stopPropagation();
                                           decreaseQuantity(product.ID);
                                         }}
-                                        className="px-3 py-2 font-bold hover:bg-green-700"
+                                        className="px-3 font-bold hover:bg-green-700"
                                       >
                                         −
                                       </button>
@@ -1116,15 +1106,12 @@ export default function CategoryPage() {
                                           e.stopPropagation();
                                           increaseQuantity(product.ID);
                                         }}
-                                        className="px-3 py-2 font-bold hover:bg-green-700"
+                                        className="px-3 font-bold hover:bg-green-700"
                                       >
                                         +
                                       </button>
-
                                     </div>
-
                                   )}
-
                                 </div>
 
                               </div>

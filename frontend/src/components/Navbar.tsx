@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
 
@@ -29,6 +30,8 @@ interface UserProfile {
 }
 
 export default function Navbar() {
+    const pathname = usePathname();
+
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const [addresses, setAddresses] = useState<Address[]>([]);
@@ -49,87 +52,87 @@ export default function Navbar() {
     // =========================
 
     useEffect(() => {
-        const token = localStorage.getItem("token");
+        const checkAuth = () => {
+            const token = localStorage.getItem("token");
 
-        setIsLoggedIn(!!token);
+            setIsLoggedIn(!!token);
 
-        if (!token) return;
+            if (!token) {
+                setPhoneNumber("Account");
+                setAddresses([]);
+                setSelectedAddress(null);
+                setCartItems([]);
+                return;
+            }
 
-        // =========================
-        // LOAD PROFILE
-        // =========================
+            // Load profile
+            apiFetch("/profile")
+                .then((data: UserProfile) => {
+                    const phone =
+                        data?.phone ||
+                        data?.phone_number;
 
-        apiFetch("/profile")
-            .then((data: UserProfile) => {
-                const phone =
-                    data?.phone ||
-                    data?.phone_number;
+                    if (phone) {
+                        setPhoneNumber(phone);
+                    }
+                })
+                .catch((error) => {
+                    console.error("Profile error:", error);
+                });
 
-                if (phone) {
-                    setPhoneNumber(phone);
-                }
-            })
-            .catch((error) => {
-                console.error(
-                    "Profile error:",
-                    error
-                );
-            });
-
-        // =========================
-        // LOAD ADDRESSES
-        // =========================
-
-        apiFetch("/addresses")
-            .then((data) => {
-                const list =
-                    Array.isArray(data)
+            // Load addresses
+            apiFetch("/addresses")
+                .then((data) => {
+                    const list = Array.isArray(data)
                         ? data
                         : [];
 
-                setAddresses(list);
+                    setAddresses(list);
 
-                const savedAddressId =
-                    localStorage.getItem(
-                        "selectedAddressId"
-                    );
+                    const savedAddressId =
+                        localStorage.getItem("selectedAddressId");
 
-                if (savedAddressId) {
-                    const saved =
-                        list.find(
+                    if (savedAddressId) {
+                        const saved = list.find(
                             (address: Address) =>
                                 address.ID ===
-                                Number(
-                                    savedAddressId
-                                )
+                                Number(savedAddressId)
                         );
 
-                    if (saved) {
-                        setSelectedAddress(saved);
-                        return;
+                        if (saved) {
+                            setSelectedAddress(saved);
+                            return;
+                        }
                     }
-                }
 
-                if (list.length > 0) {
-                    setSelectedAddress(
-                        list[0]
-                    );
+                    if (list.length > 0) {
+                        setSelectedAddress(list[0]);
 
-                    localStorage.setItem(
-                        "selectedAddressId",
-                        String(list[0].ID)
-                    );
-                }
-            })
-            .catch((error) => {
-                console.error(
-                    "Address error:",
-                    error
-                );
-            });
+                        localStorage.setItem(
+                            "selectedAddressId",
+                            String(list[0].ID)
+                        );
+                    }
+                })
+                .catch((error) => {
+                    console.error("Address error:", error);
+                });
 
-        loadCart();
-    }, []);
+            loadCart();
+        };
+
+        checkAuth();
+
+        window.addEventListener("authUpdated", checkAuth);
+        window.addEventListener("storage", checkAuth);
+        window.addEventListener("focus", checkAuth);
+
+        return () => {
+            window.removeEventListener("authUpdated", checkAuth);
+            window.removeEventListener("storage", checkAuth);
+            window.removeEventListener("focus", checkAuth);
+        };
+    }, [pathname]);
 
     // =========================
     // LOAD CART
@@ -254,7 +257,7 @@ export default function Navbar() {
             (total, item) =>
                 total +
                 item.product.price *
-                    item.quantity,
+                item.quantity,
             0
         );
 
@@ -276,6 +279,10 @@ export default function Navbar() {
         setSelectedAddress(null);
         setAddresses([]);
         setCartItems([]);
+
+        window.dispatchEvent(
+            new Event("authUpdated")
+        );
 
         window.location.href = "/";
     };
@@ -400,11 +407,10 @@ export default function Navbar() {
                                                             address
                                                         )
                                                     }
-                                                    className={`w-full px-4 py-4 text-left hover:bg-gray-50 ${
-                                                        isSelected
+                                                    className={`w-full px-4 py-4 text-left hover:bg-gray-50 ${isSelected
                                                             ? "bg-green-50"
                                                             : ""
-                                                    }`}
+                                                        }`}
                                                 >
 
                                                     <div className="flex gap-3">

@@ -12,6 +12,7 @@ interface CartItem {
     ID: number;
     name: string;
     price: number;
+    image_url?: string;
   };
 }
 
@@ -356,11 +357,10 @@ export default function CheckoutPage() {
 
                         <div
                           key={address.ID}
-                          className={`rounded-xl border p-4 transition ${
-                            selectedAddress?.ID === address.ID
+                          className={`rounded-xl border p-4 transition ${selectedAddress?.ID === address.ID
                               ? "border-green-500 bg-green-50"
                               : "border-gray-200 bg-white"
-                          }`}
+                            }`}
                         >
 
                           <div className="flex items-start gap-3">
@@ -449,45 +449,49 @@ export default function CheckoutPage() {
 
               {/* YOUR ITEMS */}
               <div className="rounded-2xl bg-white p-6 shadow-sm">
-
                 <h2 className="mb-5 text-xl font-bold">
                   Your Items
                 </h2>
 
                 <div className="space-y-4">
-
                   {items.map((item) => (
-
                     <div
                       key={item.ID}
-                      className="flex items-center justify-between border-b pb-4 last:border-b-0 last:pb-0"
+                      className="flex items-center gap-4 rounded-xl border border-gray-100 bg-white p-3"
                     >
+                      {/* PRODUCT IMAGE */}
+                      <div className="flex h-20 w-20 shrink-0 items-center justify-center overflow-hidden rounded-xl bg-gray-50">
+                        {item.product.image_url ? (
+                          <img
+                            src={item.product.image_url}
+                            alt={item.product.name}
+                            className="h-full w-full object-contain"
+                          />
+                        ) : (
+                          <span className="text-xs text-gray-400">
+                            No image
+                          </span>
+                        )}
+                      </div>
 
-                      <div>
-
-                        <h3 className="font-semibold">
+                      {/* PRODUCT DETAILS */}
+                      <div className="min-w-0 flex-1">
+                        <h3 className="line-clamp-2 font-semibold text-gray-900">
                           {item.product.name}
                         </h3>
 
                         <p className="mt-1 text-sm text-gray-500">
-                          ₹{item.product.price} ×{" "}
-                          {item.quantity}
+                          ₹{item.product.price} × {item.quantity}
                         </p>
-
                       </div>
 
-                      <p className="font-semibold">
-                        ₹
-                        {item.product.price *
-                          item.quantity}
+                      {/* ITEM TOTAL */}
+                      <p className="shrink-0 font-semibold text-gray-900">
+                        ₹{item.product.price * item.quantity}
                       </p>
-
                     </div>
-
                   ))}
-
                 </div>
-
               </div>
 
             </div>
