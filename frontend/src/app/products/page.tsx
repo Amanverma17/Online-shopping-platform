@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
@@ -20,7 +20,7 @@ interface Product {
     category?: Category;
 }
 
-export default function ProductsPage() {
+function ProductsContent() {
     const searchParams = useSearchParams();
 
     const search = searchParams.get("search") || "";
@@ -43,11 +43,7 @@ export default function ProductsPage() {
                     Array.isArray(data) ? data : []
                 );
             } catch (error) {
-                console.error(
-                    "Products error:",
-                    error
-                );
-
+                console.error("Products error:", error);
                 setProducts([]);
             } finally {
                 setLoading(false);
@@ -59,9 +55,6 @@ export default function ProductsPage() {
 
     return (
         <main className="min-h-screen bg-gray-50 px-8 py-10">
-
-            {/* PAGE TITLE */}
-
             <div className="mx-auto max-w-7xl">
 
                 <h1 className="text-3xl font-bold text-gray-900">
@@ -80,17 +73,11 @@ export default function ProductsPage() {
                           } found`}
                 </p>
 
-
-                {/* LOADING */}
-
                 {loading && (
                     <div className="mt-10 text-center text-gray-500">
                         Loading products...
                     </div>
                 )}
-
-
-                {/* NO RESULTS */}
 
                 {!loading && products.length === 0 && (
                     <div className="mt-16 text-center">
@@ -117,21 +104,15 @@ export default function ProductsPage() {
                     </div>
                 )}
 
-
-                {/* PRODUCTS */}
-
                 {!loading && products.length > 0 && (
                     <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 
                         {products.map((product) => (
-
                             <Link
                                 key={product.ID}
                                 href={`/products/${product.ID}`}
                                 className="overflow-hidden rounded-xl bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-lg"
                             >
-
-                                {/* IMAGE */}
 
                                 <div className="flex h-56 items-center justify-center bg-gray-100 p-5">
 
@@ -142,9 +123,6 @@ export default function ProductsPage() {
                                     />
 
                                 </div>
-
-
-                                {/* PRODUCT DETAILS */}
 
                                 <div className="p-5">
 
@@ -173,14 +151,28 @@ export default function ProductsPage() {
                                 </div>
 
                             </Link>
-
                         ))}
 
                     </div>
                 )}
 
             </div>
-
         </main>
+    );
+}
+
+export default function ProductsPage() {
+    return (
+        <Suspense
+            fallback={
+                <main className="min-h-screen bg-gray-50 px-8 py-10">
+                    <div className="mx-auto max-w-7xl text-center text-gray-500">
+                        Loading products...
+                    </div>
+                </main>
+            }
+        >
+            <ProductsContent />
+        </Suspense>
     );
 }
