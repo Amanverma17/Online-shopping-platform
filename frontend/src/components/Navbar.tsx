@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
 
+
 interface Address {
     ID: number;
     name: string;
@@ -39,6 +40,7 @@ export default function Navbar() {
     const [addresses, setAddresses] = useState<Address[]>([]);
     const [selectedAddress, setSelectedAddress] =
         useState<Address | null>(null);
+
 
     const [addressOpen, setAddressOpen] = useState(false);
 
@@ -307,6 +309,10 @@ export default function Navbar() {
 
         router.push(`/products?search=${encodeURIComponent(query)}`);
     };
+
+    if (pathname === "/login" || pathname === "/register") {
+        return null;
+    }
 
     return (
         <nav className="w-full border-b border-gray-200 bg-white">
@@ -686,7 +692,10 @@ export default function Navbar() {
 
                 </Link>
 
+
             </div>
+
+
         </nav>
     );
 }
