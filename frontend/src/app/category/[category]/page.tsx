@@ -5,8 +5,6 @@ import { useParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import Link from "next/link";
 
-
-
 interface Category {
   ID: number;
   name: string;
@@ -220,6 +218,8 @@ export default function CategoryPage() {
 
   const [selectedSubCategory, setSelectedSubCategory] =
     useState("All Products");
+
+  const [sortOption, setSortOption] = useState("recommended");
 
   // =====================================================
   // LOAD PRODUCTS
@@ -710,6 +710,18 @@ export default function CategoryPage() {
         );
       });
 
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortOption === "low") {
+      return a.price - b.price;
+    }
+
+    if (sortOption === "high") {
+      return b.price - a.price;
+    }
+
+    return 0;
+  });
+
   // =====================================================
   // ADD TO CART
   // =====================================================
@@ -895,7 +907,7 @@ export default function CategoryPage() {
         <div className="mb-4 text-sm text-gray-500">
           <Link
             href="/"
-            className="hover:text-green-600"
+            className="cursor-pointer hover:text-green-600"
           >
             Home
           </Link>
@@ -993,16 +1005,20 @@ export default function CategoryPage() {
                       products
                     </p>
 
-                    <select className="rounded-lg border px-3 py-2 text-sm outline-none">
-                      <option>
+                    <select
+                      value={sortOption}
+                      onChange={(e) => setSortOption(e.target.value)}
+                      className="rounded-lg border px-3 py-2 text-sm outline-none"
+                    >
+                      <option value="recommended">
                         Sort by: Recommended
                       </option>
 
-                      <option>
+                      <option value="low">
                         Price: Low to High
                       </option>
 
-                      <option>
+                      <option value="high">
                         Price: High to Low
                       </option>
                     </select>
@@ -1012,7 +1028,7 @@ export default function CategoryPage() {
                   {/* Product Grid */}
                   <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
 
-                    {filteredProducts.map(
+                    {sortedProducts.map(
                       (product) => {
 
                         const quantity =
