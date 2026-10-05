@@ -5,6 +5,8 @@ import { useParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import Link from "next/link";
 
+
+
 interface Category {
   ID: number;
   name: string;
@@ -891,7 +893,15 @@ export default function CategoryPage() {
 
         {/* Breadcrumb */}
         <div className="mb-4 text-sm text-gray-500">
-          Home /{" "}
+          <Link
+            href="/"
+            className="hover:text-green-600"
+          >
+            Home
+          </Link>
+
+          <span className="mx-2">/</span>
+
           <span className="text-gray-900">
             {categoryName}
           </span>

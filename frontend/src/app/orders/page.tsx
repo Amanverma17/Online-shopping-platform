@@ -50,6 +50,33 @@ export default function OrdersPage() {
     });
   };
 
+  const cancelOrder = async (orderId: number) => {
+    const confirmed = window.confirm(
+      "Are you sure you want to cancel this order?"
+    );
+
+    if (!confirmed) return;
+
+    try {
+      await apiFetch(`/orders/${orderId}/cancel`, {
+        method: "PUT",
+      });
+
+      setOrders((currentOrders) =>
+        currentOrders.map((order) =>
+          order.ID === orderId
+            ? { ...order, status: "cancelled" }
+            : order
+        )
+      );
+
+      alert("Order cancelled successfully");
+    } catch (error) {
+      console.error("Cancel order error:", error);
+      alert("Failed to cancel order");
+    }
+  };
+
   const getStatusStyle = (status: string) => {
     switch (status.toLowerCase()) {
       case "placed":
@@ -257,6 +284,16 @@ export default function OrdersPage() {
                           )}
                         </p>
 
+                        {(order.status === "placed" ||
+                          order.status === "processing") && (
+                            <button
+                              onClick={() => cancelOrder(order.ID)}
+                              className="mt-3 rounded-lg border border-red-300 px-4 py-2 text-sm font-semibold text-red-600 transition hover:bg-red-50"
+                            >
+                              Cancel Order
+                            </button>
+                          )}
+
                       </div>
 
                     </div>
@@ -327,7 +364,7 @@ export default function OrdersPage() {
 
                     </div>
 
-                    {/* Order Footer */}
+                    {/* Order Footer
                     <div className="flex items-center justify-between border-t border-gray-100 bg-gray-50 px-5 py-4">
 
                       <span className="text-sm font-medium text-gray-600">
@@ -341,7 +378,7 @@ export default function OrdersPage() {
                         )}
                       </span>
 
-                    </div>
+                    </div> */}
 
                   </div>
                 );

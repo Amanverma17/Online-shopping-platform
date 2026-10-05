@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 
 	"ecommerce-backend/config"
 	"ecommerce-backend/models"
@@ -195,6 +196,73 @@ func UpdateOrderStatus(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Order status updated",
+		"order":   order,
+	})
+}
+
+func CancelMyOrder(c *gin.Context) {
+
+	orderID := c.Param("id")
+
+	// Get logged-in user
+	userIDValue, exists := c.Get("user_id")
+
+	if !exists {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Unauthorized",
+		})
+		return
+	}
+
+	userID := uint(userIDValue.(float64))
+
+	// Find order belonging to this user
+	var order models.Order
+
+	if err := config.DB.
+		Preload("Items.Product").
+		Where("id = ? AND user_id = ?", orderID, userID).
+		First(&order).Error; err != nil {
+
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Order not found",
+		})
+		return
+	}
+
+	// Only placed and processing orders can be cancelled
+	if order.Status != "placed" && order.Status != "processing" {
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "This order cannot be cancelled",
+		})
+		return
+	}
+
+	// Restore product stock
+	for _, item := range order.Items {
+
+		config.DB.Model(&models.Product{}).
+			Where("id = ?", item.ProductID).
+			UpdateColumn(
+				"stock",
+				gorm.Expr("stock + ?", item.Quantity),
+			)
+	}
+
+	// Change order status
+	order.Status = "cancelled"
+
+	if err := config.DB.Save(&order).Error; err != nil {
+
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Failed to cancel order",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Order cancelled successfully",
 		"order":   order,
 	})
 }

@@ -158,6 +158,7 @@ func main() {
 	// Orders
 	protected.POST("/orders", handlers.CreateOrder)
 	protected.GET("/orders", handlers.GetMyOrders)
+	protected.PUT("/orders/:id/cancel", handlers.CancelMyOrder)
 
 	// Start server
 	port := os.Getenv("PORT")

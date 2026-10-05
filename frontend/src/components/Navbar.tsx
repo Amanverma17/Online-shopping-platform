@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiFetch } from "@/lib/api";
@@ -41,6 +41,9 @@ export default function Navbar() {
     const [selectedAddress, setSelectedAddress] =
         useState<Address | null>(null);
 
+    const addressRef = useRef<HTMLDivElement>(null);
+    const accountRef = useRef<HTMLDivElement>(null);
+
 
     const [addressOpen, setAddressOpen] = useState(false);
 
@@ -48,8 +51,57 @@ export default function Navbar() {
 
     const [accountOpen, setAccountOpen] = useState(false);
 
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+
+            if (
+                !target.closest("[data-address-dropdown]") &&
+                !target.closest("[data-account-dropdown]")
+            ) {
+                setAddressOpen(false);
+                setAccountOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener(
+                "mousedown",
+                handleClickOutside
+            );
+        };
+    }, []);
+
     const [phoneNumber, setPhoneNumber] =
         useState("Account");
+
+    // =========================
+    // CLOSE DROPDOWNS ON OUTSIDE CLICK
+    // =========================
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            const target = event.target as HTMLElement;
+
+            if (
+                !target.closest("[data-address-dropdown]") &&
+                !target.closest("[data-account-dropdown]")
+            ) {
+                setAddressOpen(false);
+                setAccountOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener(
+                "mousedown",
+                handleClickOutside
+            );
+        };
+    }, []);
 
     // =========================
     // LOAD USER DATA
@@ -336,14 +388,16 @@ export default function Navbar() {
                 {/* DELIVERY ADDRESS */}
                 {/* ===================== */}
 
-                <div className="relative mr-8 w-[230px] shrink-0">
+                <div
+                    className="relative mr-8 w-[230px] shrink-0"
+                    data-address-dropdown
+                >
 
                     <button
-                        onClick={() =>
-                            setAddressOpen(
-                                !addressOpen
-                            )
-                        }
+                        onClick={() => {
+                            setAddressOpen(!addressOpen);
+                            setAccountOpen(false);
+                        }}
                         className="block w-full text-left"
                     >
                         <div className="flex items-center gap-1">
@@ -537,16 +591,18 @@ export default function Navbar() {
 
                     {isLoggedIn ? (
 
-                        <div className="relative">
+                        <div
+                            className="relative"
+                            data-account-dropdown
+                        >
 
                             {/* ACCOUNT BUTTON */}
 
                             <button
-                                onClick={() =>
-                                    setAccountOpen(
-                                        !accountOpen
-                                    )
-                                }
+                                onClick={() => {
+                                    setAccountOpen(!accountOpen);
+                                    setAddressOpen(false);
+                                }}
                                 className="flex items-center gap-2 px-2 py-2 text-lg font-medium"
                             >
 

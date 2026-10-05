@@ -133,7 +133,7 @@ export default function AddressesPage() {
             <main className="min-h-screen bg-gray-50 text-gray-900">
 
                 {/* Navbar */}
-                <nav className="border-b bg-white">
+                {/* <nav className="border-b bg-white">
                     <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
                         <Link
@@ -151,7 +151,7 @@ export default function AddressesPage() {
                         </Link>
 
                     </div>
-                </nav>
+                </nav> */}
 
                 <section className="mx-auto max-w-4xl px-4 py-8">
 
