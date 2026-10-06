@@ -5,7 +5,7 @@ import "gorm.io/gorm"
 type Address struct {
 	gorm.Model
 
-	UserID  uint   `json:"user_id"`
+	UserID  uint   `json:"user_id" gorm:"index"`
 	Name    string `json:"name"`
 	Phone   string `json:"phone"`
 	House   string `json:"house"`

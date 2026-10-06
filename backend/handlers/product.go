@@ -1,8 +1,11 @@
 package handlers
 
 import (
+	"context"
+	"encoding/json"
 	"net/http"
 	"strconv"
+	"time"
 
 	"github.com/gin-gonic/gin"
 
@@ -57,6 +60,25 @@ func GetProduct(c *gin.Context) {
 		return
 	}
 
+	ctx := context.Background()
+
+	// Redis key
+	cacheKey := "product:" + strconv.Itoa(id)
+
+	// 1. Check Redis
+	cachedProduct, err := config.RedisClient.Get(ctx, cacheKey).Result()
+
+	if err == nil {
+
+		var product models.Product
+
+		if json.Unmarshal([]byte(cachedProduct), &product) == nil {
+			c.JSON(http.StatusOK, product)
+			return
+		}
+	}
+
+	// 2. Redis MISS → get from PostgreSQL
 	var product models.Product
 
 	if err := config.DB.Preload("Category").First(&product, id).Error; err != nil {
@@ -66,6 +88,21 @@ func GetProduct(c *gin.Context) {
 		return
 	}
 
+	// 3. Convert product to JSON
+	productJSON, err := json.Marshal(product)
+
+	if err == nil {
+
+		// 4. Store in Redis for 5 minutes
+		config.RedisClient.Set(
+			ctx,
+			cacheKey,
+			productJSON,
+			5*time.Minute,
+		)
+	}
+
+	// 5. Return product
 	c.JSON(http.StatusOK, product)
 }
 
@@ -137,6 +174,10 @@ func UpdateProduct(c *gin.Context) {
 
 	config.DB.Save(&product)
 
+	// Remove old cached product
+	cacheKey := "product:" + strconv.Itoa(id)
+	config.RedisClient.Del(context.Background(), cacheKey)
+
 	c.JSON(http.StatusOK, product)
 }
 
@@ -159,6 +200,10 @@ func DeleteProduct(c *gin.Context) {
 		})
 		return
 	}
+
+	// Remove cached product
+	cacheKey := "product:" + strconv.Itoa(id)
+	config.RedisClient.Del(context.Background(), cacheKey)
 
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Product deleted successfully",

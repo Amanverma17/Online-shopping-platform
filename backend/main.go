@@ -50,6 +50,7 @@ func createAdmin() {
 func main() {
 
 	config.ConnectDatabase()
+	config.ConnectRedis()
 	createAdmin()
 
 	config.DB.AutoMigrate(
@@ -97,8 +98,17 @@ func main() {
 	// Authentication
 	// =========================
 
-	router.POST("/api/auth/register", handlers.Register)
-	router.POST("/api/auth/login", handlers.Login)
+	router.POST(
+	"/api/auth/register",
+	middleware.RateLimitMiddleware(),
+	handlers.Register,
+)
+
+router.POST(
+	"/api/auth/login",
+	middleware.RateLimitMiddleware(),
+	handlers.Login,
+)
 
 	// =========================
 	// Protected routes

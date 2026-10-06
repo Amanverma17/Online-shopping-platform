@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -26,7 +27,20 @@ func ConnectDatabase() {
 		log.Fatal("Failed to connect to database:", err)
 	}
 
+	// Get the underlying database/sql connection
+	sqlDB, err := database.DB()
+
+	if err != nil {
+		log.Fatal("Failed to get database connection:", err)
+	}
+
+	// Connection pool settings
+	sqlDB.SetMaxOpenConns(25)
+	sqlDB.SetMaxIdleConns(10)
+	sqlDB.SetConnMaxLifetime(30 * time.Minute)
+
 	DB = database
 
 	fmt.Println("Database connected successfully!")
+	fmt.Println("Database connection pool configured!")
 }
