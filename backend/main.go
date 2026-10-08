@@ -10,6 +10,7 @@ import (
 	"ecommerce-backend/handlers"
 	"ecommerce-backend/middleware"
 	"ecommerce-backend/models"
+	"ecommerce-backend/workers"
 
 	"github.com/gin-contrib/cors"
 
@@ -51,9 +52,11 @@ func main() {
 
 	config.ConnectDatabase()
 	config.ConnectRedis()
+	config.ConnectRabbitMQ()
 	createAdmin()
 
 	config.DB.AutoMigrate(
+		&models.OutboxEvent{},
 		&models.User{},
 		&models.Category{},
 		&models.Product{},
@@ -65,7 +68,16 @@ func main() {
 
 	seedDatabase()
 
+	workers.StartOrderWorker()
+	workers.StartOutboxWorker()
+
 	router := gin.Default()
+
+	router.GET("/health", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"status": "UP",
+		})
+	})
 
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
@@ -99,16 +111,16 @@ func main() {
 	// =========================
 
 	router.POST(
-	"/api/auth/register",
-	middleware.RateLimitMiddleware(),
-	handlers.Register,
-)
+		"/api/auth/register",
+		middleware.RateLimitMiddleware(),
+		handlers.Register,
+	)
 
-router.POST(
-	"/api/auth/login",
-	middleware.RateLimitMiddleware(),
-	handlers.Login,
-)
+	router.POST(
+		"/api/auth/login",
+		middleware.RateLimitMiddleware(),
+		handlers.Login,
+	)
 
 	// =========================
 	// Protected routes

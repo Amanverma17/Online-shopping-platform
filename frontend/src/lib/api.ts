@@ -38,11 +38,23 @@ export async function apiFetch(
     );
   }
 
-  if (!response.ok) {
+if (!response.ok) {
+    if (response.status === 401) {
+        localStorage.removeItem("token");
+
+        window.dispatchEvent(new Event("authUpdated"));
+
+        if (window.location.pathname !== "/login") {
+            window.location.href = "/login";
+        }
+
+        throw new Error("Session expired. Please login again.");
+    }
+
     throw new Error(
-      data.error || data.message || "Something went wrong"
+        data.error || data.message || "Something went wrong"
     );
-  }
+}
 
   return data;
 }
