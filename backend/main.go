@@ -82,6 +82,7 @@ func main() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
 			"http://localhost:3000",
+			"https://estore-fr3e.onrender.com",
 			"https://abb-ecommerce-frontend.onrender.com",
 		},
 		AllowMethods: []string{
