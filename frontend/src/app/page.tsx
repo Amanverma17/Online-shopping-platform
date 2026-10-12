@@ -124,7 +124,7 @@ export default function Home() {
           <div className="max-w-xl">
 
             <p className="mb-2 text-sm font-semibold uppercase tracking-wider">
-              ABB Store
+              E-STORE
             </p>
 
             <h1 className="text-4xl font-extrabold md:text-5xl">
@@ -209,7 +209,7 @@ export default function Home() {
       )}
 
       {/* =========================
-          WHY SHOP WITH ABB STORE
+          WHY SHOP WITH E-STORE
       ========================= */}
 
       <section className="mx-auto max-w-7xl px-6 pb-16">
@@ -217,7 +217,7 @@ export default function Home() {
         <div className="rounded-2xl bg-gray-50 p-8">
 
           <h2 className="text-2xl font-bold">
-            Why shop with ABB Store?
+            Why shop with E-STORE?
           </h2>
 
           <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">

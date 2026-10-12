@@ -48,7 +48,7 @@ export default function RegisterPage() {
 
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-yellow-400 text-xl font-bold">
-            ABB
+            E-Store
           </div>
 
           <h1 className="text-2xl font-bold">
@@ -56,7 +56,7 @@ export default function RegisterPage() {
           </h1>
 
           <p className="mt-2 text-sm text-gray-500">
-            Join ABB Store and start shopping
+            Join E-Store and start shopping
           </p>
         </div>
 

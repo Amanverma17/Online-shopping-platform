@@ -58,7 +58,7 @@ export default function AdminLoginPage() {
         <div className="text-center">
 
           <h1 className="text-3xl font-bold text-gray-900">
-            ABB Admin
+            E-STORE Admin
           </h1>
 
           <p className="mt-2 text-gray-500">
@@ -84,7 +84,7 @@ export default function AdminLoginPage() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              placeholder="admin@abbstore.com"
+              placeholder="Enter admin email"
               className="w-full rounded-lg border border-gray-300 px-4 py-3 text-gray-900 outline-none focus:border-black"
             />
 

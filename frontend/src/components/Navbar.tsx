@@ -378,7 +378,7 @@ export default function Navbar() {
                     href="/"
                     className="mr-8 shrink-0 text-3xl font-extrabold tracking-tight"
                 >
-                    ABB
+                    E-
                     <span className="text-green-600">
                         Store
                     </span>

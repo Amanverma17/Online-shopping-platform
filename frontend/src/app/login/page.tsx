@@ -57,7 +57,7 @@ export default function LoginPage() {
             href="/"
             className="text-2xl font-bold text-green-600"
           >
-            ABB Store
+            E-Store
           </Link>
 
           <Link
@@ -79,13 +79,13 @@ export default function LoginPage() {
           <div className="flex justify-center">
 
             <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-green-500 text-xl font-bold text-white">
-              ABB
+              E-STORE
             </div>
 
           </div>
 
           <h1 className="mt-6 text-center text-2xl font-bold text-gray-900">
-            Welcome to ABB Store
+            Welcome to E-Store
           </h1>
 
           <p className="mt-2 text-center text-gray-500">

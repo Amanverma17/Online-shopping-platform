@@ -60,7 +60,7 @@ export default function AdminProductsPage() {
           <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 sm:px-8">
             <Link href="/admin" className="flex items-center gap-3">
               <span className="grid h-10 w-10 place-items-center rounded-xl bg-emerald-600 text-sm font-black text-white">AB</span>
-              <span><span className="block text-base font-bold">ABB Store</span><span className="block text-xs text-slate-500">Administration</span></span>
+              <span><span className="block text-base font-bold">E-Store</span><span className="block text-xs text-slate-500">Administration</span></span>
             </Link>
             <Link href="/" className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-medium hover:bg-slate-50">View storefront ↗</Link>
           </div>

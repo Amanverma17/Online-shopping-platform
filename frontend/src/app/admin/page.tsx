@@ -16,7 +16,7 @@ export default function AdminDashboard() {
               href="/"
               className="text-2xl font-bold"
             >
-              ABB Store
+              E-Store
             </Link>
 
             <Link
@@ -37,7 +37,7 @@ export default function AdminDashboard() {
           </h1>
 
           <p className="mt-2 text-gray-600">
-            Manage your ABB Store
+            Manage your E-Store
           </p>
 
           <div className="mt-10 grid gap-6 md:grid-cols-3">

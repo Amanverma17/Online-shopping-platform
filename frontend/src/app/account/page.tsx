@@ -24,7 +24,7 @@ export default function AccountPage() {
               href="/"
               className="text-2xl font-extrabold tracking-tight"
             >
-              ABB<span className="text-green-600">Store</span>
+              E-STORE<span className="text-green-600">Store</span>
             </Link>
 
             <Link

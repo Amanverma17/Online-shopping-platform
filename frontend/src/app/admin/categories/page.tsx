@@ -75,7 +75,7 @@ export default function AdminCategoriesPage() {
               href="/admin"
               className="text-2xl font-bold"
             >
-              ABB Admin
+              E-STORE Admin
             </Link>
 
             <Link

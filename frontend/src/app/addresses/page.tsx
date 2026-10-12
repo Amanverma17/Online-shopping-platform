@@ -140,7 +140,7 @@ export default function AddressesPage() {
                             href="/"
                             className="text-2xl font-extrabold"
                         >
-                            ABB<span className="text-green-600">Store</span>
+                            E-STORE<span className="text-green-600">Store</span>
                         </Link>
 
                         <Link
