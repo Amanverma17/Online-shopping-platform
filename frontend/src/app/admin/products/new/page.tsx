@@ -21,6 +21,7 @@ export default function NewProductPage() {
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [stock, setStock] = useState("");
+  const [imageURL, setImageURL] = useState("");
   const [categoryId, setCategoryId] = useState("");
 
   const [loadingCategories, setLoadingCategories] = useState(true);
@@ -36,7 +37,6 @@ export default function NewProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setError("");
 
     if (!categoryId) {
@@ -54,12 +54,12 @@ export default function NewProductPage() {
           description,
           price: Number(price),
           stock: Number(stock),
+          image_url: imageURL,
           category_id: Number(categoryId),
         }),
       });
 
       alert("Product created successfully!");
-
       router.push("/admin/products");
     } catch (error) {
       setError(
@@ -75,14 +75,9 @@ export default function NewProductPage() {
   return (
     <AdminGuard>
       <main className="min-h-screen bg-gray-50 text-gray-900">
-
         <nav className="border-b bg-white">
           <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-
-            <Link
-              href="/admin"
-              className="text-2xl font-bold"
-            >
+            <Link href="/admin" className="text-2xl font-bold">
               ABB Admin
             </Link>
 
@@ -92,15 +87,11 @@ export default function NewProductPage() {
             >
               ← Products
             </Link>
-
           </div>
         </nav>
 
         <section className="mx-auto max-w-2xl px-6 py-12">
-
-          <h1 className="text-3xl font-bold">
-            Add Product
-          </h1>
+          <h1 className="text-3xl font-bold">Add Product</h1>
 
           <p className="mt-2 text-gray-500">
             Create a new product for your store.
@@ -110,12 +101,10 @@ export default function NewProductPage() {
             onSubmit={handleSubmit}
             className="mt-8 space-y-6 rounded-xl bg-white p-8 shadow-sm"
           >
-
             <div>
               <label className="mb-2 block font-medium">
                 Product Name
               </label>
-
               <input
                 type="text"
                 value={name}
@@ -130,12 +119,9 @@ export default function NewProductPage() {
               <label className="mb-2 block font-medium">
                 Description
               </label>
-
               <textarea
                 value={description}
-                onChange={(e) =>
-                  setDescription(e.target.value)
-                }
+                onChange={(e) => setDescription(e.target.value)}
                 required
                 rows={4}
                 className="w-full rounded-lg border px-4 py-3 outline-none focus:border-black"
@@ -145,9 +131,8 @@ export default function NewProductPage() {
 
             <div>
               <label className="mb-2 block font-medium">
-                Price
+                Price (₹)
               </label>
-
               <input
                 type="number"
                 value={price}
@@ -164,7 +149,6 @@ export default function NewProductPage() {
               <label className="mb-2 block font-medium">
                 Stock
               </label>
-
               <input
                 type="number"
                 value={stock}
@@ -176,13 +160,43 @@ export default function NewProductPage() {
               />
             </div>
 
-            {/* Category */}
+            {/* Product Image URL */}
+            <div>
+              <label className="mb-2 block font-medium">
+                Product Image URL
+              </label>
+              <input
+                type="url"
+                value={imageURL}
+                onChange={(e) => setImageURL(e.target.value)}
+                className="w-full rounded-lg border px-4 py-3 outline-none focus:border-black"
+                placeholder="https://example.com/product.jpg"
+              />
+
+              {imageURL && (
+                <div className="mt-3">
+                  <p className="mb-2 text-sm text-gray-500">
+                    Image preview
+                  </p>
+                  <img
+                    src={imageURL}
+                    alt="Product preview"
+                    className="h-40 w-40 rounded-lg border bg-white object-contain"
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                    onLoad={(e) => {
+                      e.currentTarget.style.display = "block";
+                    }}
+                  />
+                </div>
+              )}
+            </div>
 
             <div>
               <label className="mb-2 block font-medium">
                 Category
               </label>
-
               <select
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
@@ -190,7 +204,6 @@ export default function NewProductPage() {
                 disabled={loadingCategories}
                 className="w-full rounded-lg border bg-white px-4 py-3 outline-none focus:border-black"
               >
-
                 <option value="">
                   {loadingCategories
                     ? "Loading categories..."
@@ -198,14 +211,10 @@ export default function NewProductPage() {
                 </option>
 
                 {categories.map((category) => (
-                  <option
-                    key={category.ID}
-                    value={category.ID}
-                  >
+                  <option key={category.ID} value={category.ID}>
                     {category.name}
                   </option>
                 ))}
-
               </select>
             </div>
 
@@ -217,18 +226,13 @@ export default function NewProductPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || loadingCategories}
               className="w-full rounded-lg bg-black py-3 font-semibold text-white hover:bg-gray-800 disabled:bg-gray-400"
             >
-              {loading
-                ? "Creating Product..."
-                : "Create Product"}
+              {loading ? "Creating Product..." : "Create Product"}
             </button>
-
           </form>
-
         </section>
-
       </main>
     </AdminGuard>
   );

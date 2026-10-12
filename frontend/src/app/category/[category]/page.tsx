@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams } from "next/navigation";
 import { apiFetch } from "@/lib/api";
 import Link from "next/link";
+
+const PAGE_SIZE = 10;
 
 interface Category {
   ID: number;
@@ -213,8 +215,16 @@ export default function CategoryPage() {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   const [loading, setLoading] = useState(true);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+  const [page, setPage] = useState(1);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [adding, setAdding] = useState<number | null>(null);
   const [error, setError] = useState("");
+  const [loadMoreError, setLoadMoreError] = useState("");
+
+  const loadMoreRef = useRef<HTMLDivElement | null>(null);
+  const loadingMoreRef = useRef(false);
 
   const [selectedSubCategory, setSelectedSubCategory] =
     useState("All Products");
@@ -226,48 +236,114 @@ export default function CategoryPage() {
   // =====================================================
 
   useEffect(() => {
-    const loadProducts = async () => {
+    let cancelled = false;
+
+    const loadInitialProducts = async () => {
       try {
         setLoading(true);
+        setLoadingMore(false);
+        loadingMoreRef.current = false;
+        setHasMore(true);
+        setPage(1);
+        setProducts([]);
+        setSelectedCategoryId(null);
         setError("");
+        setLoadMoreError("");
 
-        // Get all categories
-        const categories: Category[] =
-          await apiFetch("/categories");
-
-        // Find current category
+        // Resolve the selected category first.
+        const categories: Category[] = await apiFetch("/categories");
         const selectedCategory = categories.find(
           (category) =>
-            category.name.toLowerCase() ===
-            categoryName.toLowerCase()
+            category.name.toLowerCase() === categoryName.toLowerCase()
         );
 
         if (!selectedCategory) {
-          setError("Category not found");
+          if (!cancelled) setError("Category not found");
           return;
         }
 
-        // Get products for this category
+        if (cancelled) return;
+        setSelectedCategoryId(selectedCategory.ID);
+
+        // Fetch only the first batch from PostgreSQL.
         const data: Product[] = await apiFetch(
-          `/products?category_id=${selectedCategory.ID}`
+          `/products?category_id=${selectedCategory.ID}&page=1&limit=${PAGE_SIZE}`
         );
 
-        setProducts(data);
+        if (cancelled) return;
+        const firstPage = Array.isArray(data) ? data : [];
+        setProducts(firstPage);
+        setHasMore(firstPage.length === PAGE_SIZE);
       } catch (error) {
+        if (cancelled) return;
         console.error("Products error:", error);
-
         setError(
-          error instanceof Error
-            ? error.message
-            : "Failed to load products"
+          error instanceof Error ? error.message : "Failed to load products"
         );
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     };
 
-    loadProducts();
+    loadInitialProducts();
+
+    return () => {
+      cancelled = true;
+    };
   }, [categoryName]);
+
+  // Fetch another batch when the sentinel near the bottom enters the viewport.
+  useEffect(() => {
+    const sentinel = loadMoreRef.current;
+    if (!sentinel || loading || loadingMore || !hasMore || selectedCategoryId === null || loadMoreError) return;
+
+    const observer = new IntersectionObserver(
+      async (entries) => {
+        if (
+          !entries[0]?.isIntersecting ||
+          loadingMoreRef.current ||
+          !hasMore
+        ) {
+          return;
+        }
+
+        loadingMoreRef.current = true;
+        setLoadingMore(true);
+
+        const nextPage = page + 1;
+
+        try {
+          const data: Product[] = await apiFetch(
+            `/products?category_id=${selectedCategoryId}&page=${nextPage}&limit=${PAGE_SIZE}`
+          );
+
+          const nextProducts = Array.isArray(data) ? data : [];
+          setProducts((current) => {
+            // Avoid duplicates if the observer fires more than once.
+            const existingIds = new Set(current.map((product) => product.ID));
+            return [
+              ...current,
+              ...nextProducts.filter((product) => !existingIds.has(product.ID)),
+            ];
+          });
+          setPage(nextPage);
+          setHasMore(nextProducts.length === PAGE_SIZE);
+        } catch (error) {
+          console.error("Failed to load more products:", error);
+          setLoadMoreError(
+            error instanceof Error ? error.message : "Failed to load more products"
+          );
+        } finally {
+          loadingMoreRef.current = false;
+          setLoadingMore(false);
+        }
+      },
+      { rootMargin: "300px" }
+    );
+
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [categoryName, hasMore, loading, loadingMore, loadMoreError, page, selectedCategoryId]);
 
   // =====================================================
   // LOAD CART
@@ -990,6 +1066,16 @@ export default function CategoryPage() {
                 </div>
               )}
 
+            {!loading &&
+              !error &&
+              products.length > 0 &&
+              filteredProducts.length === 0 &&
+              !hasMore && (
+                <div className="py-10 text-center text-gray-500">
+                  No products match this subcategory.
+                </div>
+              )}
+
             {/* Products */}
             {!loading &&
               !error &&
@@ -1148,6 +1234,46 @@ export default function CategoryPage() {
                     )}
 
                   </div>
+
+                  {filteredProducts.length === 0 && hasMore && (
+                    <p className="py-6 text-center text-sm text-gray-500">
+                      Loading matching products...
+                    </p>
+                  )}
+
+                  {hasMore && (
+                    <div
+                      ref={loadMoreRef}
+                      className="h-8 w-full"
+                      aria-hidden="true"
+                    />
+                  )}
+
+                  {loadingMore && (
+                    <p className="py-4 text-center text-sm text-gray-500">
+                      Loading more products...
+                    </p>
+                  )}
+
+                  {loadMoreError && (
+                    <div className="py-4 text-center">
+                      <p className="mb-2 text-sm text-red-600">
+                        Could not load more products.
+                      </p>
+                      <button
+                        onClick={() => setLoadMoreError("")}
+                        className="rounded-lg border px-4 py-2 text-sm font-medium hover:bg-gray-50"
+                      >
+                        Retry
+                      </button>
+                    </div>
+                  )}
+
+                  {!hasMore && products.length > 0 && (
+                    <p className="py-6 text-center text-sm text-gray-500">
+                      You&apos;ve reached the end of the products.
+                    </p>
+                  )}
 
                 </>
               )}

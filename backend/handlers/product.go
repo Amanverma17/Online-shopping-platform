@@ -23,7 +23,6 @@ type ProductRequest struct {
 }
 
 func GetProducts(c *gin.Context) {
-
 	var products []models.Product
 
 	query := config.DB.Preload("Category")
@@ -37,6 +36,46 @@ func GetProducts(c *gin.Context) {
 
 	if categoryID != "" {
 		query = query.Where("category_id = ?", categoryID)
+	}
+
+	// Apply pagination when page or limit is supplied. Keeping pagination
+	// optional preserves existing callers (for example, admin screens) that
+	// expect the complete product list.
+	pageParam := c.Query("page")
+	limitParam := c.Query("limit")
+
+	if pageParam != "" || limitParam != "" {
+		page := 1
+		limit := 10
+
+		if pageParam != "" {
+			parsedPage, err := strconv.Atoi(pageParam)
+			if err != nil || parsedPage < 1 {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "page must be a positive integer"})
+				return
+			}
+			page = parsedPage
+		}
+
+		if limitParam != "" {
+			parsedLimit, err := strconv.Atoi(limitParam)
+			if err != nil || parsedLimit < 1 {
+				c.JSON(http.StatusBadRequest, gin.H{"error": "limit must be a positive integer"})
+				return
+			}
+			limit = parsedLimit
+		}
+
+		// Prevent clients from requesting excessively large batches.
+		if limit > 100 {
+			limit = 100
+		}
+
+		offset := (page - 1) * limit
+		query = query.Order("products.id ASC").Limit(limit).Offset(offset)
+	} else {
+		// Keep results deterministic for callers that request all products.
+		query = query.Order("products.id ASC")
 	}
 
 	if err := query.Find(&products).Error; err != nil {
