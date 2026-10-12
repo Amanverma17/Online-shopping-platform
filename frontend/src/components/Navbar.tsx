@@ -368,7 +368,7 @@ export default function Navbar() {
 
     return (
         <nav className="w-full border-b border-gray-200 bg-white">
-            <div className="flex h-[86px] w-full items-center px-8">
+            <div className="grid w-full grid-cols-[minmax(0,1fr)_auto] items-center gap-3 px-3 py-3 md:flex md:h-[86px] md:gap-0 md:px-8 md:py-0">
 
                 {/* ===================== */}
                 {/* LOGO */}
@@ -376,7 +376,7 @@ export default function Navbar() {
 
                 <Link
                     href="/"
-                    className="mr-8 shrink-0 text-3xl font-extrabold tracking-tight"
+                    className="col-start-1 row-start-1 mr-0 shrink-0 text-2xl font-extrabold tracking-tight sm:text-3xl md:mr-8"
                 >
                     E-
                     <span className="text-green-600">
@@ -389,7 +389,7 @@ export default function Navbar() {
                 {/* ===================== */}
 
                 <div
-                    className="relative mr-8 w-[230px] shrink-0"
+                    className="relative col-start-1 row-start-3 min-w-0 w-full shrink-0 md:row-auto md:mr-8 md:w-[230px]"
                     data-address-dropdown
                 >
 
@@ -568,7 +568,7 @@ export default function Navbar() {
 
                 <form
                     onSubmit={handleSearch}
-                    className="flex min-w-0 flex-1 items-center rounded-xl border border-gray-300 px-5 py-3"
+                    className="col-span-2 row-start-2 flex min-w-0 w-full items-center rounded-xl border border-gray-300 px-3 py-2.5 sm:px-5 sm:py-3 md:row-auto md:col-auto md:flex-1"
                 >
                     <span className="mr-3 shrink-0 text-xl text-gray-700">
                         ⌕
@@ -587,7 +587,7 @@ export default function Navbar() {
                 {/* ACCOUNT */}
                 {/* ===================== */}
 
-                <div className="ml-8 shrink-0">
+                <div className="col-start-2 row-start-1 shrink-0 justify-self-end md:ml-8 md:row-auto md:col-auto">
 
                     {isLoggedIn ? (
 
@@ -714,7 +714,7 @@ export default function Navbar() {
 
                         <Link
                             href="/login"
-                            className="hidden text-lg font-medium md:block"
+                            className="text-sm font-medium sm:text-base md:text-lg"
                         >
                             Login
                         </Link>
@@ -729,7 +729,7 @@ export default function Navbar() {
 
                 <Link
                     href="/cart"
-                    className="ml-8 flex shrink-0 items-center rounded-xl bg-green-600 px-5 py-3 font-semibold text-white hover:bg-green-700"
+                    className="col-start-2 row-start-3 flex shrink-0 items-center justify-self-end rounded-xl bg-green-600 px-3 py-2.5 text-sm font-semibold text-white hover:bg-green-700 sm:px-4 md:ml-8 md:px-5 md:py-3 md:text-base md:row-auto md:col-auto"
                 >
 
                     🛒

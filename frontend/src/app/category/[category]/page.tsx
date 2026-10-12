@@ -977,7 +977,7 @@ export default function CategoryPage() {
           Navbar comes from layout.tsx
       ================================================= */}
 
-      <section className="mx-auto max-w-7xl px-4 py-5">
+      <section className="mx-auto w-full max-w-7xl px-3 py-4 sm:px-4 sm:py-5">
 
         {/* Breadcrumb */}
         <div className="mb-4 text-sm text-gray-500">
@@ -996,7 +996,7 @@ export default function CategoryPage() {
         </div>
 
         {/* Category Title */}
-        <h1 className="mb-5 text-2xl font-bold">
+        <h1 className="mb-4 text-xl font-bold sm:mb-5 sm:text-2xl">
           {categoryName}
         </h1>
 
@@ -1112,7 +1112,7 @@ export default function CategoryPage() {
                   </div>
 
                   {/* Product Grid */}
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-4 xl:grid-cols-5">
 
                     {sortedProducts.map(
                       (product) => {
@@ -1125,14 +1125,14 @@ export default function CategoryPage() {
                         return (
                           <div
                             key={product.ID}
-                            className="flex h-full min-h-[355px] flex-col overflow-hidden rounded-xl border bg-white transition hover:shadow-md"
+                            className="flex h-full min-h-[300px] min-w-0 flex-col overflow-hidden rounded-xl border bg-white transition hover:shadow-md sm:min-h-[355px]"
                           >
                             <Link
                               href={`/products/${product.ID}`}
                               className="flex h-full flex-col"
                             >
                               {/* Product Image */}
-                              <div className="relative h-[190px] shrink-0 bg-gray-50">
+                              <div className="relative h-[135px] shrink-0 bg-gray-50 sm:h-[170px] xl:h-[190px]">
                                 {product.image_url ? (
                                   <img
                                     src={product.image_url}
@@ -1147,7 +1147,7 @@ export default function CategoryPage() {
                               </div>
 
                               {/* Product Details */}
-                              <div className="flex flex-1 flex-col p-3">
+                              <div className="flex min-w-0 flex-1 flex-col p-2 sm:p-3">
 
                                 {/* Delivery */}
                                 <p className="mb-1 h-[18px] text-[11px] text-gray-500">
@@ -1172,7 +1172,7 @@ export default function CategoryPage() {
                                 {/* Price + Cart */}
                                 <div className="mt-auto flex items-center justify-between pt-3">
 
-                                  <span className="font-bold">
+                                  <span className="text-sm font-bold sm:text-base">
                                     ₹{product.price}
                                   </span>
 

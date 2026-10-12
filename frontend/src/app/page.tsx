@@ -117,9 +117,9 @@ export default function Home() {
           HERO
       ========================= */}
 
-      <section className="mx-auto max-w-7xl px-6 pt-6">
+      <section className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 sm:pt-6">
 
-        <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-green-600 to-green-500 px-8 py-12 text-white">
+        <div className="overflow-hidden rounded-2xl bg-gradient-to-r from-green-600 to-green-500 px-5 py-8 text-white sm:px-8 sm:py-12">
 
           <div className="max-w-xl">
 
@@ -127,13 +127,13 @@ export default function Home() {
               E-STORE
             </p>
 
-            <h1 className="text-4xl font-extrabold md:text-5xl">
+            <h1 className="text-3xl font-extrabold leading-tight sm:text-4xl md:text-5xl">
               Everything you need,
               <br />
               delivered fast.
             </h1>
 
-            <p className="mt-4 text-lg text-green-50">
+            <p className="mt-4 text-base text-green-50 sm:text-lg">
               Shop electronics, mobiles, laptops, groceries,
               fashion and much more.
             </p>
@@ -158,12 +158,12 @@ export default function Home() {
       {categoriesVisible && (
         <section
           id="categories"
-          className="mx-auto max-w-7xl px-6 py-10"
+          className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10"
         >
 
           <div className="mb-6">
 
-            <h2 className="text-2xl font-bold">
+            <h2 className="text-xl font-bold sm:text-2xl">
               Shop by Category
             </h2>
 
@@ -173,7 +173,7 @@ export default function Home() {
 
           </div>
 
-          <div className="grid grid-cols-5 gap-x-2 gap-y-5 sm:grid-cols-10">
+          <div className="grid grid-cols-4 gap-x-3 gap-y-5 sm:grid-cols-5 sm:gap-x-4 lg:grid-cols-10">
 
             {categories.map((category) => (
 
@@ -185,7 +185,7 @@ export default function Home() {
                 className="group text-center transition hover:-translate-y-1"
               >
 
-                <div className="mx-auto aspect-square w-16 overflow-hidden rounded-xl bg-gray-50 sm:w-20">
+                <div className="mx-auto aspect-square w-14 overflow-hidden rounded-xl bg-gray-50 sm:w-16 lg:w-20">
 
                   <img
                     src={category.image}
@@ -195,7 +195,7 @@ export default function Home() {
 
                 </div>
 
-                <h3 className="mt-2 text-xs font-medium leading-tight sm:text-sm">
+                <h3 className="mt-2 break-words text-[11px] font-medium leading-tight sm:text-xs lg:text-sm">
                   {category.name}
                 </h3>
 
@@ -212,11 +212,11 @@ export default function Home() {
           WHY SHOP WITH E-STORE
       ========================= */}
 
-      <section className="mx-auto max-w-7xl px-6 pb-16">
+      <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 sm:pb-16">
 
-        <div className="rounded-2xl bg-gray-50 p-8">
+        <div className="rounded-2xl bg-gray-50 p-5 sm:p-8">
 
-          <h2 className="text-2xl font-bold">
+          <h2 className="text-xl font-bold sm:text-2xl">
             Why shop with E-STORE?
           </h2>
 
